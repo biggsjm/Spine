@@ -1,4 +1,4 @@
-# Spine - Back Health Management
+# SpineFit - Back Health Management
 
 A minimal iOS app for managing bilateral facet arthritis and nerve compression in the lumbar spine.
 
