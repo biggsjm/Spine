@@ -4,6 +4,7 @@ import SwiftData
 struct LogPainView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \PainEntry.timestamp, order: .reverse) private var entries: [PainEntry]
+    @FocusState private var isNotesFieldFocused: Bool
 
     @State private var painLevel: Double = 5
     @State private var selectedLocation = "L5"
@@ -47,6 +48,7 @@ struct LogPainView: View {
                         TextField("Additional details...", text: $notes, axis: .vertical)
                             .textFieldStyle(.roundedBorder)
                             .lineLimit(2...4)
+                            .focused($isNotesFieldFocused)
                     }
 
                     // Log button
@@ -58,7 +60,7 @@ struct LogPainView: View {
                         }
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.accentColor)
+                        .background(Color.blue)
                         .foregroundStyle(.white)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
@@ -80,6 +82,14 @@ struct LogPainView: View {
             }
             .navigationTitle("Log Pain")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        isNotesFieldFocused = false
+                    }
+                }
+            }
         }
     }
 

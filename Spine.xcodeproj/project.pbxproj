@@ -17,6 +17,8 @@
 		A100000F000000000000001 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000010000000000000001 /* AnalyticsView.swift */; };
 		A1000022000000000000001 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000023000000000000001 /* SampleData.swift */; };
 		A1000024000000000000001 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000025000000000000001 /* OnboardingView.swift */; };
+		A1000026000000000000001 /* Issue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000027000000000000001 /* Issue.swift */; };
+		A1000028000000000000001 /* IssuesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000029000000000000001 /* IssuesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +33,8 @@
 		A1000011000000000000001 /* Spine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1000023000000000000001 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
 		A1000025000000000000001 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		A1000027000000000000001 /* Issue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Issue.swift; sourceTree = "<group>"; };
+		A1000029000000000000001 /* IssuesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +81,7 @@
 			children = (
 				A1000008000000000000001 /* PainEntry.swift */,
 				A100000A000000000000001 /* Exercise.swift */,
+				A1000027000000000000001 /* Issue.swift */,
 				A1000023000000000000001 /* SampleData.swift */,
 			);
 			path = Models;
@@ -89,6 +94,7 @@
 				A100000E000000000000001 /* ExercisesView.swift */,
 				A1000010000000000000001 /* AnalyticsView.swift */,
 				A1000025000000000000001 /* OnboardingView.swift */,
+				A1000029000000000000001 /* IssuesView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -171,6 +177,8 @@
 				A100000F000000000000001 /* AnalyticsView.swift in Sources */,
 				A1000022000000000000001 /* SampleData.swift in Sources */,
 				A1000024000000000000001 /* OnboardingView.swift in Sources */,
+				A1000026000000000000001 /* Issue.swift in Sources */,
+				A1000028000000000000001 /* IssuesView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,7 +329,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -350,7 +358,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

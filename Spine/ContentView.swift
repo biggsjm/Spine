@@ -23,6 +23,12 @@ struct ContentView: View {
                     Label("Trends", systemImage: "chart.line.uptrend.xyaxis")
                 }
                 .tag(2)
+
+            IssuesView()
+                .tabItem {
+                    Label("Issues", systemImage: "ladybug")
+                }
+                .tag(3)
         }
         .tint(.primary)
         .sheet(isPresented: $showOnboarding) {
