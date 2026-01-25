@@ -15,7 +15,7 @@ struct OnboardingView: View {
                         .font(.system(size: 80))
                         .foregroundStyle(.blue)
 
-                    Text("Welcome to SpineFit")
+                    Text("Welcome to BackFit")
                         .font(.system(.largeTitle, design: .default, weight: .bold))
 
                     Text("Manage your back health with daily tracking and insights")
