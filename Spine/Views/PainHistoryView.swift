@@ -8,6 +8,8 @@ struct PainHistoryView: View {
     @State private var searchText = ""
     @State private var filterLocation = "All"
     @State private var filterTimeRange = "All Time"
+    @State private var showingShareSheet = false
+    @State private var exportText = ""
 
     let timeRanges = ["All Time", "Today", "This Week", "This Month"]
 
@@ -103,6 +105,20 @@ struct PainHistoryView: View {
             }
             .navigationTitle("Pain History")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    if !filteredEntries.isEmpty {
+                        Button {
+                            exportPainData()
+                        } label: {
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                    }
+                }
+            }
+            .sheet(isPresented: $showingShareSheet) {
+                ShareSheet(items: [exportText])
+            }
         }
     }
 
@@ -132,6 +148,40 @@ struct PainHistoryView: View {
 
     private var lowestPain: Int {
         filteredEntries.map { $0.level }.min() ?? 0
+    }
+
+    private func exportPainData() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+
+        var text = "MyBackFit Pain History Export\n"
+        text += "Generated: \(dateFormatter.string(from: Date()))\n"
+        text += "Filter: \(filterLocation) - \(filterTimeRange)\n"
+        text += "\n"
+        text += "Summary Statistics:\n"
+        text += "Total Entries: \(filteredEntries.count)\n"
+        text += "Average Pain Level: \(String(format: "%.1f", averagePain))\n"
+        text += "Highest Pain: \(highestPain)\n"
+        text += "Lowest Pain: \(lowestPain)\n"
+        text += "\n" + String(repeating: "=", count: 50) + "\n\n"
+
+        for entry in filteredEntries {
+            text += "\(dateFormatter.string(from: entry.timestamp))\n"
+            text += "Pain Level: \(entry.level)/10\n"
+            text += "Location: \(entry.location)\n"
+            text += "Symptom: \(entry.symptomType)\n"
+            if let trigger = entry.trigger {
+                text += "Trigger: \(trigger)\n"
+            }
+            if let notes = entry.notes {
+                text += "Notes: \(notes)\n"
+            }
+            text += "\n" + String(repeating: "-", count: 50) + "\n\n"
+        }
+
+        exportText = text
+        showingShareSheet = true
     }
 
     private func deleteEntries(at offsets: IndexSet) {

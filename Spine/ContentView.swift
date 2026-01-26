@@ -24,11 +24,23 @@ struct ContentView: View {
                 }
                 .tag(2)
 
+            CalendarView()
+                .tabItem {
+                    Label("Calendar", systemImage: "calendar")
+                }
+                .tag(3)
+
+            RemindersView()
+                .tabItem {
+                    Label("Reminders", systemImage: "bell")
+                }
+                .tag(4)
+
             IssuesView()
                 .tabItem {
                     Label("Issues", systemImage: "ladybug")
                 }
-                .tag(3)
+                .tag(5)
         }
         .tint(.primary)
         .sheet(isPresented: $showOnboarding) {

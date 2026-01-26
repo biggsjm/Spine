@@ -9,6 +9,7 @@ struct SpineApp: App {
             Exercise.self,
             ExerciseCompletion.self,
             Issue.self,
+            Reminder.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

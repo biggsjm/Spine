@@ -20,6 +20,9 @@
 		A1000026000000000000001 /* Issue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000027000000000000001 /* Issue.swift */; };
 		A1000028000000000000001 /* IssuesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000029000000000000001 /* IssuesView.swift */; };
 		A100002A000000000000001 /* PainHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100002B000000000000001 /* PainHistoryView.swift */; };
+		A100002C000000000000001 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100002D000000000000001 /* CalendarView.swift */; };
+		A100002E000000000000001 /* Reminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100002F000000000000001 /* Reminder.swift */; };
+		A1000030000000000000001 /* RemindersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000031000000000000001 /* RemindersView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +40,9 @@
 		A1000027000000000000001 /* Issue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Issue.swift; sourceTree = "<group>"; };
 		A1000029000000000000001 /* IssuesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesView.swift; sourceTree = "<group>"; };
 		A100002B000000000000001 /* PainHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PainHistoryView.swift; sourceTree = "<group>"; };
+		A100002D000000000000001 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		A100002F000000000000001 /* Reminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reminder.swift; sourceTree = "<group>"; };
+		A1000031000000000000001 /* RemindersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +90,7 @@
 				A1000008000000000000001 /* PainEntry.swift */,
 				A100000A000000000000001 /* Exercise.swift */,
 				A1000027000000000000001 /* Issue.swift */,
+				A100002F000000000000001 /* Reminder.swift */,
 				A1000023000000000000001 /* SampleData.swift */,
 			);
 			path = Models;
@@ -98,6 +105,8 @@
 				A1000025000000000000001 /* OnboardingView.swift */,
 				A1000029000000000000001 /* IssuesView.swift */,
 				A100002B000000000000001 /* PainHistoryView.swift */,
+				A100002D000000000000001 /* CalendarView.swift */,
+				A1000031000000000000001 /* RemindersView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -183,6 +192,9 @@
 				A1000026000000000000001 /* Issue.swift in Sources */,
 				A1000028000000000000001 /* IssuesView.swift in Sources */,
 				A100002A000000000000001 /* PainHistoryView.swift in Sources */,
+				A100002C000000000000001 /* CalendarView.swift in Sources */,
+				A100002E000000000000001 /* Reminder.swift in Sources */,
+				A1000030000000000000001 /* RemindersView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
