@@ -70,15 +70,42 @@ struct LogPainView: View {
 
                 Divider()
 
-                // Recent entries
-                List {
-                    ForEach(entries.prefix(20)) { entry in
-                        EntryRow(entry: entry)
-                            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                // Recent entries header
+                HStack {
+                    Text("RECENT ENTRIES")
+                        .font(.system(.caption, design: .monospaced))
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    NavigationLink(destination: PainHistoryView()) {
+                        Text("View All")
+                            .font(.system(.caption, design: .monospaced))
                     }
-                    .onDelete(perform: deleteEntries)
                 }
-                .listStyle(.plain)
+                .padding(.horizontal)
+                .padding(.top, 12)
+                .padding(.bottom, 8)
+
+                // Recent entries list (last 5)
+                if entries.isEmpty {
+                    VStack(spacing: 12) {
+                        Image(systemName: "tray")
+                            .font(.system(size: 48))
+                            .foregroundStyle(.secondary)
+                        Text("No entries yet")
+                            .font(.system(.body, design: .default))
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(maxHeight: .infinity)
+                } else {
+                    List {
+                        ForEach(entries.prefix(5)) { entry in
+                            EntryRow(entry: entry)
+                                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                        }
+                        .onDelete(perform: deleteEntries)
+                    }
+                    .listStyle(.plain)
+                }
             }
             .navigationTitle("Log Pain")
             .navigationBarTitleDisplayMode(.inline)

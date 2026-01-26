@@ -1,4 +1,4 @@
-# BackFit - Back Health Management
+# MyBackFit - Back Health Management
 
 A minimal iOS app for managing bilateral facet arthritis and nerve compression in the lumbar spine.
 

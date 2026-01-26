@@ -6,6 +6,8 @@ struct IssuesView: View {
     @Query(sort: \Issue.timestamp, order: .reverse) private var issues: [Issue]
 
     @State private var showingAddIssue = false
+    @State private var showingShareSheet = false
+    @State private var exportText = ""
 
     var body: some View {
         NavigationStack {
@@ -26,6 +28,15 @@ struct IssuesView: View {
             .navigationTitle("Beta Issues")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    if !issues.isEmpty {
+                        Button {
+                            exportIssues()
+                        } label: {
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showingAddIssue = true
@@ -36,6 +47,9 @@ struct IssuesView: View {
             }
             .sheet(isPresented: $showingAddIssue) {
                 AddIssueView()
+            }
+            .sheet(isPresented: $showingShareSheet) {
+                ShareSheet(items: [exportText])
             }
         }
     }
@@ -67,6 +81,36 @@ struct IssuesView: View {
         }
         .padding()
         .frame(maxHeight: .infinity)
+    }
+
+    private func exportIssues() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+
+        var text = "MyBackFit Beta Issues Export\n"
+        text += "Generated: \(dateFormatter.string(from: Date()))\n"
+        text += "Total Issues: \(issues.count)\n"
+        text += "Open: \(issues.filter { !$0.isResolved }.count)\n"
+        text += "Resolved: \(issues.filter { $0.isResolved }.count)\n"
+        text += "\n" + String(repeating: "=", count: 50) + "\n\n"
+
+        for (index, issue) in issues.enumerated() {
+            text += "Issue #\(index + 1)\n"
+            text += "Status: \(issue.isResolved ? "✓ Resolved" : "○ Open")\n"
+            text += "Category: \(issue.category)\n"
+            text += "Severity: \(issue.severity)\n"
+            text += "Title: \(issue.title)\n"
+            text += "Description: \(issue.issueDescription)\n"
+            text += "Reported: \(dateFormatter.string(from: issue.timestamp))\n"
+            if let resolved = issue.resolvedAt {
+                text += "Resolved: \(dateFormatter.string(from: resolved))\n"
+            }
+            text += "\n" + String(repeating: "-", count: 50) + "\n\n"
+        }
+
+        exportText = text
+        showingShareSheet = true
     }
 
     private func deleteIssues(at offsets: IndexSet) {
@@ -198,6 +242,17 @@ struct AddIssueView: View {
         modelContext.insert(issue)
         dismiss()
     }
+}
+
+struct ShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        return controller
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 #Preview {
