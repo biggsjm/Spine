@@ -36,11 +36,17 @@ struct ContentView: View {
                 }
                 .tag(4)
 
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape")
+                }
+                .tag(5)
+
             IssuesView()
                 .tabItem {
                     Label("Issues", systemImage: "ladybug")
                 }
-                .tag(5)
+                .tag(6)
         }
         .tint(.primary)
         .sheet(isPresented: $showOnboarding) {

@@ -24,6 +24,16 @@ final class Issue {
         isResolved = true
         resolvedAt = Date()
     }
+
+    func toggleResolved() {
+        if isResolved {
+            isResolved = false
+            resolvedAt = nil
+        } else {
+            isResolved = true
+            resolvedAt = Date()
+        }
+    }
 }
 
 extension Issue {
