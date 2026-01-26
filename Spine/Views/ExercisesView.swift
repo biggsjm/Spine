@@ -17,7 +17,7 @@ struct ExercisesView: View {
                     List {
                         ForEach(exercises) { exercise in
                             ExerciseRow(exercise: exercise) {
-                                completeExercise(exercise)
+                                toggleExercise(exercise)
                             }
                             .listRowInsets(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
                         }
@@ -72,17 +72,20 @@ struct ExercisesView: View {
         .frame(maxHeight: .infinity)
     }
 
-    private func completeExercise(_ exercise: Exercise) {
-        let completion = ExerciseCompletion(
-            exerciseName: exercise.name,
-            sets: exercise.sets,
-            reps: exercise.reps
-        )
-        modelContext.insert(completion)
-        exercise.markCompleted()
+    private func toggleExercise(_ exercise: Exercise) {
+        if !exercise.isCompleted {
+            // Only log completion when marking as complete
+            let completion = ExerciseCompletion(
+                exerciseName: exercise.name,
+                sets: exercise.sets,
+                reps: exercise.reps
+            )
+            modelContext.insert(completion)
 
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.success)
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(.success)
+        }
+        exercise.toggleCompleted()
     }
 
     private func deleteExercises(at offsets: IndexSet) {
@@ -95,6 +98,7 @@ struct ExercisesView: View {
 struct ExerciseRow: View {
     @Bindable var exercise: Exercise
     let onComplete: () -> Void
+    @State private var showingDetail = false
 
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
@@ -127,9 +131,85 @@ struct ExerciseRow: View {
                         .font(.system(.caption2, design: .monospaced))
                         .foregroundStyle(.tertiary)
                 }
+
+                if !exercise.formGuide.isEmpty {
+                    Button {
+                        showingDetail = true
+                    } label: {
+                        Label("How to perform", systemImage: "info.circle")
+                            .font(.system(.caption, design: .default, weight: .medium))
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(.blue)
+                    .padding(.top, 4)
+                }
             }
 
             Spacer()
+        }
+        .sheet(isPresented: $showingDetail) {
+            ExerciseDetailView(exercise: exercise)
+        }
+    }
+}
+
+struct ExerciseDetailView: View {
+    let exercise: Exercise
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    // Header
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(exercise.name)
+                            .font(.system(.title2, design: .default, weight: .bold))
+
+                        Text(exercise.exerciseDescription)
+                            .font(.system(.body, design: .default))
+                            .foregroundStyle(.secondary)
+
+                        HStack(spacing: 16) {
+                            Label("\(exercise.sets) sets", systemImage: "number")
+                            Label("\(exercise.reps) reps", systemImage: "repeat")
+                            Label(exercise.frequency, systemImage: "calendar")
+                        }
+                        .font(.system(.subheadline, design: .monospaced))
+                        .foregroundStyle(.secondary)
+                        .padding(.top, 4)
+                    }
+                    .padding(.horizontal)
+
+                    Divider()
+
+                    // Form Guide
+                    if !exercise.formGuide.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Label("How to Perform", systemImage: "figure.walk")
+                                .font(.system(.headline, design: .default, weight: .semibold))
+                                .foregroundStyle(.blue)
+
+                            Text(exercise.formGuide)
+                                .font(.system(.body, design: .default))
+                                .lineSpacing(4)
+                        }
+                        .padding(.horizontal)
+                    }
+
+                    Spacer()
+                }
+                .padding(.vertical)
+            }
+            .navigationTitle("Exercise Guide")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
         }
     }
 }
@@ -143,6 +223,7 @@ struct AddExerciseView: View {
     @State private var sets = 3
     @State private var reps = 10
     @State private var frequency = "daily"
+    @State private var formGuide = ""
 
     let frequencies = ["daily", "2x/day", "3x/week", "5x/week"]
 
@@ -163,6 +244,15 @@ struct AddExerciseView: View {
                             Text(freq).tag(freq)
                         }
                     }
+                }
+
+                Section {
+                    TextField("Form guide (optional)", text: $formGuide, axis: .vertical)
+                        .lineLimit(5...10)
+                } header: {
+                    Text("How to Perform")
+                } footer: {
+                    Text("Add step-by-step instructions for proper form")
                 }
             }
             .navigationTitle("Add Exercise")
@@ -189,7 +279,8 @@ struct AddExerciseView: View {
             exerciseDescription: description,
             sets: sets,
             reps: reps,
-            frequency: frequency
+            frequency: frequency,
+            formGuide: formGuide
         )
         modelContext.insert(exercise)
         dismiss()

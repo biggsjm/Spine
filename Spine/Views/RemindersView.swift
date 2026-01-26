@@ -12,10 +12,6 @@ struct RemindersView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                if !notificationsEnabled {
-                    notificationBanner
-                }
-
                 if reminders.isEmpty {
                     emptyState
                 } else {
@@ -32,6 +28,13 @@ struct RemindersView: View {
             .navigationTitle("Reminders")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    if !notificationsEnabled {
+                        Image(systemName: "bell.slash.fill")
+                            .foregroundStyle(.orange)
+                            .help("Notifications disabled - enable in Settings")
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showingAddReminder = true
@@ -47,26 +50,6 @@ struct RemindersView: View {
                 checkNotificationPermission()
             }
         }
-    }
-
-    private var notificationBanner: some View {
-        VStack(spacing: 8) {
-            HStack {
-                Image(systemName: "bell.slash.fill")
-                    .foregroundStyle(.orange)
-                Text("Notifications are disabled")
-                    .font(.system(.body, design: .default, weight: .medium))
-                Spacer()
-            }
-            Button("Enable in Settings") {
-                if let url = URL(string: UIApplication.openSettingsURLString) {
-                    UIApplication.shared.open(url)
-                }
-            }
-            .font(.system(.caption, design: .monospaced))
-        }
-        .padding()
-        .background(Color(.secondarySystemBackground))
     }
 
     private var emptyState: some View {
@@ -124,6 +107,7 @@ struct ReminderRow: View {
         HStack(alignment: .top, spacing: 16) {
             Toggle("", isOn: $reminder.isEnabled)
                 .labelsHidden()
+                .tint(.blue)
                 .onChange(of: reminder.isEnabled) { _, newValue in
                     if newValue {
                         scheduleNotification(for: reminder)
@@ -208,6 +192,7 @@ struct AddReminderView: View {
                 Section {
                     DatePicker("Time", selection: $time, displayedComponents: .hourAndMinute)
                     Toggle("Repeat Daily", isOn: $repeatDaily)
+                        .tint(.blue)
                     Picker("Category", selection: $category) {
                         ForEach(Reminder.categories, id: \.self) { cat in
                             Text(cat).tag(cat)

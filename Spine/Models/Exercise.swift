@@ -11,20 +11,33 @@ final class Exercise {
     var completedAt: Date?
     var lastCompletedDate: Date?
     var frequency: String // daily, 2x/day, 3x/week, etc.
+    var formGuide: String // Step-by-step instructions for proper form
 
-    init(name: String, exerciseDescription: String, sets: Int, reps: Int, frequency: String = "daily") {
+    init(name: String, exerciseDescription: String, sets: Int, reps: Int, frequency: String = "daily", formGuide: String = "") {
         self.name = name
         self.exerciseDescription = exerciseDescription
         self.sets = sets
         self.reps = reps
         self.isCompleted = false
         self.frequency = frequency
+        self.formGuide = formGuide
     }
 
     func markCompleted() {
         isCompleted = true
         completedAt = Date()
         lastCompletedDate = Date()
+    }
+
+    func toggleCompleted() {
+        if isCompleted {
+            isCompleted = false
+            completedAt = nil
+        } else {
+            isCompleted = true
+            completedAt = Date()
+            lastCompletedDate = Date()
+        }
     }
 
     func resetDaily() {

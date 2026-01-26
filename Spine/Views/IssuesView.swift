@@ -125,7 +125,7 @@ struct IssueRow: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
-            Button(action: { issue.markResolved() }) {
+            Button(action: { issue.toggleResolved() }) {
                 Image(systemName: issue.isResolved ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 28))
                     .foregroundStyle(issue.isResolved ? .green : .secondary)
