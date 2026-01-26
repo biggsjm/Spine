@@ -71,7 +71,6 @@ struct PainHistoryView: View {
                     }
                 }
                 .padding()
-                .background(Color(.secondarySystemBackground))
 
                 if filteredEntries.isEmpty {
                     emptyState
