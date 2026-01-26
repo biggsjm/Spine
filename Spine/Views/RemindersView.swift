@@ -110,7 +110,8 @@ struct RemindersView: View {
         for index in offsets {
             let reminder = reminders[index]
             // Cancel notification
-            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [reminder.id.uuidString])
+            let notificationId = reminder.persistentModelID.hashValue.description
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationId])
             modelContext.delete(reminder)
         }
     }
@@ -140,7 +141,7 @@ struct ReminderRow: View {
                     .foregroundStyle(.secondary)
 
                 HStack(spacing: 12) {
-                    Label(reminder.time, style: .time)
+                    Label(reminder.time.formatted(date: .omitted, time: .shortened), systemImage: "clock")
                     Label(reminder.category, systemImage: categoryIcon(reminder.category))
                     if reminder.repeatDaily {
                         Label("Daily", systemImage: "repeat")
@@ -173,13 +174,15 @@ struct ReminderRow: View {
         let components = calendar.dateComponents([.hour, .minute], from: reminder.time)
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: reminder.repeatDaily)
-        let request = UNNotificationRequest(identifier: reminder.id.uuidString, content: content, trigger: trigger)
+        let notificationId = reminder.persistentModelID.hashValue.description
+        let request = UNNotificationRequest(identifier: notificationId, content: content, trigger: trigger)
 
         UNUserNotificationCenter.current().add(request)
     }
 
     private func cancelNotification(for reminder: Reminder) {
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [reminder.id.uuidString])
+        let notificationId = reminder.persistentModelID.hashValue.description
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationId])
     }
 }
 
@@ -253,7 +256,8 @@ struct AddReminderView: View {
                     let calendar = Calendar.current
                     let components = calendar.dateComponents([.hour, .minute], from: time)
                     let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: repeatDaily)
-                    let request = UNNotificationRequest(identifier: reminder.id.uuidString, content: content, trigger: trigger)
+                    let notificationId = reminder.persistentModelID.hashValue.description
+                    let request = UNNotificationRequest(identifier: notificationId, content: content, trigger: trigger)
 
                     UNUserNotificationCenter.current().add(request)
                 }
