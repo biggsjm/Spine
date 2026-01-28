@@ -55,6 +55,25 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    NavigationLink {
+                        RemindersView()
+                    } label: {
+                        HStack {
+                            Image(systemName: "bell")
+                                .foregroundStyle(.blue)
+                                .font(.title2)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Reminders")
+                                    .font(.system(.body, design: .default, weight: .medium))
+                                Text("Set up daily reminders")
+                                    .font(.system(.caption, design: .default))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                    .tint(.primary)
+
                     HStack {
                         Image(systemName: "heart.fill")
                             .foregroundStyle(.red)
@@ -77,9 +96,9 @@ struct SettingsView: View {
                     }
                     .padding(.vertical, 4)
                 } header: {
-                    Text("Integrations")
+                    Text("Features")
                 } footer: {
-                    Text("Connect to Apple Health to sync your activity and health data.")
+                    Text("Manage reminders and integrations.")
                 }
 
                 Section {
@@ -94,8 +113,26 @@ struct SettingsView: View {
                         }
                     }
                     .tint(.primary)
+
+                    NavigationLink {
+                        IssuesView()
+                    } label: {
+                        HStack {
+                            Image(systemName: "ladybug")
+                                .foregroundStyle(.orange)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Report Bug")
+                                    .font(.system(.body, design: .default, weight: .medium))
+                                Text("Log issues and feature requests")
+                                    .font(.system(.caption, design: .default))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                    .tint(.primary)
                 } header: {
-                    Text("Help")
+                    Text("Help & Feedback")
                 }
 
                 Section {

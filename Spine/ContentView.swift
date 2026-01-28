@@ -2,7 +2,14 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selectedTab = 0
-    @State private var showOnboarding = !UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+
+    private var showOnboarding: Binding<Bool> {
+        Binding(
+            get: { !hasCompletedOnboarding },
+            set: { if !$0 { hasCompletedOnboarding = true } }
+        )
+    }
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -18,38 +25,20 @@ struct ContentView: View {
                 }
                 .tag(1)
 
-            AnalyticsView()
+            HistoryView()
                 .tabItem {
-                    Label("Trends", systemImage: "chart.line.uptrend.xyaxis")
+                    Label("History", systemImage: "chart.line.uptrend.xyaxis")
                 }
                 .tag(2)
-
-            CalendarView()
-                .tabItem {
-                    Label("Calendar", systemImage: "calendar")
-                }
-                .tag(3)
-
-            RemindersView()
-                .tabItem {
-                    Label("Reminders", systemImage: "bell")
-                }
-                .tag(4)
 
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gearshape")
                 }
-                .tag(5)
-
-            IssuesView()
-                .tabItem {
-                    Label("Issues", systemImage: "ladybug")
-                }
-                .tag(6)
+                .tag(3)
         }
         .tint(.primary)
-        .sheet(isPresented: $showOnboarding) {
+        .sheet(isPresented: showOnboarding) {
             OnboardingView()
         }
     }

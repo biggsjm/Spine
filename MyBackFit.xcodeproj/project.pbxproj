@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A0B809DC2F29C02100F5834A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0B809DB2F29C02100F5834A /* SettingsView.swift */; };
 		A1000001000000000000001 /* SpineApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000002000000000000001 /* SpineApp.swift */; };
 		A1000003000000000000001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000004000000000000001 /* ContentView.swift */; };
 		A1000005000000000000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1000006000000000000001 /* Assets.xcassets */; };
@@ -23,9 +24,11 @@
 		A100002C000000000000001 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100002D000000000000001 /* CalendarView.swift */; };
 		A100002E000000000000001 /* Reminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100002F000000000000001 /* Reminder.swift */; };
 		A1000030000000000000001 /* RemindersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000031000000000000001 /* RemindersView.swift */; };
+		A1000032000000000000001 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000033000000000000001 /* HistoryView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A0B809DB2F29C02100F5834A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A1000002000000000000001 /* SpineApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpineApp.swift; sourceTree = "<group>"; };
 		A1000004000000000000001 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A1000006000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -43,6 +46,7 @@
 		A100002D000000000000001 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		A100002F000000000000001 /* Reminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reminder.swift; sourceTree = "<group>"; };
 		A1000031000000000000001 /* RemindersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersView.swift; sourceTree = "<group>"; };
+		A1000033000000000000001 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +63,7 @@
 		A1000013000000000000001 = {
 			isa = PBXGroup;
 			children = (
+				A0B809DB2F29C02100F5834A /* SettingsView.swift */,
 				A1000014000000000000001 /* Spine */,
 				A1000015000000000000001 /* Products */,
 			);
@@ -107,6 +112,7 @@
 				A100002B000000000000001 /* PainHistoryView.swift */,
 				A100002D000000000000001 /* CalendarView.swift */,
 				A1000031000000000000001 /* RemindersView.swift */,
+				A1000033000000000000001 /* HistoryView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -146,7 +152,7 @@
 					};
 				};
 			};
-			buildConfigurationList = A100001D000000000000001 /* Build configuration list for PBXProject "Spine" */;
+			buildConfigurationList = A100001D000000000000001 /* Build configuration list for PBXProject "MyBackFit" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -189,12 +195,14 @@
 				A100000F000000000000001 /* AnalyticsView.swift in Sources */,
 				A1000022000000000000001 /* SampleData.swift in Sources */,
 				A1000024000000000000001 /* OnboardingView.swift in Sources */,
+				A0B809DC2F29C02100F5834A /* SettingsView.swift in Sources */,
 				A1000026000000000000001 /* Issue.swift in Sources */,
 				A1000028000000000000001 /* IssuesView.swift in Sources */,
 				A100002A000000000000001 /* PainHistoryView.swift in Sources */,
 				A100002C000000000000001 /* CalendarView.swift in Sources */,
 				A100002E000000000000001 /* Reminder.swift in Sources */,
 				A1000030000000000000001 /* RemindersView.swift in Sources */,
+				A1000032000000000000001 /* HistoryView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,7 +400,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A100001D000000000000001 /* Build configuration list for PBXProject "Spine" */ = {
+		A100001D000000000000001 /* Build configuration list for PBXProject "MyBackFit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A100001E000000000000001 /* Debug */,

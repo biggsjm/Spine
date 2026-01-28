@@ -1,6 +1,47 @@
 import SwiftUI
 import SwiftData
 
+// MARK: - Frequency Parsing
+
+enum Period {
+    case daily
+    case weekly
+}
+
+func parseFrequency(_ frequency: String) -> (target: Int, period: Period) {
+    let lower = frequency.lowercased().trimmingCharacters(in: .whitespaces)
+
+    // Handle "daily" -> (1, .daily)
+    if lower == "daily" {
+        return (target: 1, period: .daily)
+    }
+
+    // Handle "Nx/day" patterns like "2x/day"
+    if lower.contains("/day") {
+        // Extract the number before "x/day"
+        let components = lower.components(separatedBy: "x/day")
+        if let firstPart = components.first, let count = Int(firstPart) {
+            return (target: count, period: .daily)
+        }
+        return (target: 1, period: .daily)
+    }
+
+    // Handle "Nx/week" patterns like "3x/week", "5x/week"
+    if lower.contains("/week") {
+        // Extract the number before "x/week"
+        let components = lower.components(separatedBy: "x/week")
+        if let firstPart = components.first, let count = Int(firstPart) {
+            return (target: count, period: .weekly)
+        }
+        return (target: 1, period: .weekly)
+    }
+
+    // Default to daily if can't parse
+    return (target: 1, period: .daily)
+}
+
+// MARK: - ExercisesView
+
 struct ExercisesView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var exercises: [Exercise]
@@ -16,9 +57,12 @@ struct ExercisesView: View {
                 } else {
                     List {
                         ForEach(exercises) { exercise in
-                            ExerciseRow(exercise: exercise) {
-                                toggleExercise(exercise)
-                            }
+                            ExerciseRow(
+                                exercise: exercise,
+                                completionsToday: completionsToday(for: exercise.name),
+                                completionsThisWeek: completionsThisWeek(for: exercise.name),
+                                onLog: { logExercise(exercise) }
+                            )
                             .listRowInsets(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
                         }
                         .onDelete(perform: deleteExercises)
@@ -72,20 +116,35 @@ struct ExercisesView: View {
         .frame(maxHeight: .infinity)
     }
 
-    private func toggleExercise(_ exercise: Exercise) {
-        if !exercise.isCompleted {
-            // Only log completion when marking as complete
-            let completion = ExerciseCompletion(
-                exerciseName: exercise.name,
-                sets: exercise.sets,
-                reps: exercise.reps
-            )
-            modelContext.insert(completion)
+    private func completionsToday(for exerciseName: String) -> Int {
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: Date())
+        return completions.filter { completion in
+            completion.exerciseName == exerciseName &&
+            completion.timestamp >= startOfDay
+        }.count
+    }
 
-            let generator = UINotificationFeedbackGenerator()
-            generator.notificationOccurred(.success)
-        }
-        exercise.toggleCompleted()
+    private func completionsThisWeek(for exerciseName: String) -> Int {
+        let calendar = Calendar.current
+        let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date())) ?? Date()
+        return completions.filter { completion in
+            completion.exerciseName == exerciseName &&
+            completion.timestamp >= startOfWeek
+        }.count
+    }
+
+    private func logExercise(_ exercise: Exercise) {
+        let completion = ExerciseCompletion(
+            exerciseName: exercise.name,
+            sets: exercise.sets,
+            reps: exercise.reps
+        )
+        modelContext.insert(completion)
+        exercise.lastCompletedDate = Date()
+
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
     }
 
     private func deleteExercises(at offsets: IndexSet) {
@@ -95,23 +154,97 @@ struct ExercisesView: View {
     }
 }
 
+// MARK: - ExerciseRow
+
 struct ExerciseRow: View {
     @Bindable var exercise: Exercise
-    let onComplete: () -> Void
+    let completionsToday: Int
+    let completionsThisWeek: Int
+    let onLog: () -> Void
+
     @State private var showingDetail = false
+    @State private var animateLog = false
+
+    private var parsedFrequency: (target: Int, period: Period) {
+        parseFrequency(exercise.frequency)
+    }
+
+    private var currentCount: Int {
+        switch parsedFrequency.period {
+        case .daily:
+            return completionsToday
+        case .weekly:
+            return completionsThisWeek
+        }
+    }
+
+    private var targetCount: Int {
+        parsedFrequency.target
+    }
+
+    private var isGoalMet: Bool {
+        currentCount >= targetCount
+    }
+
+    private var progressText: String {
+        switch parsedFrequency.period {
+        case .daily:
+            if targetCount == 1 {
+                return isGoalMet ? "Done today" : "Not done"
+            } else {
+                return "\(currentCount)/\(targetCount) today"
+            }
+        case .weekly:
+            return "\(currentCount)/\(targetCount) this week"
+        }
+    }
 
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
-            Button(action: onComplete) {
-                Image(systemName: exercise.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 28))
-                    .foregroundStyle(exercise.isCompleted ? .green : .secondary)
+            // Log button
+            Button(action: {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                    animateLog = true
+                }
+                onLog()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    animateLog = false
+                }
+            }) {
+                ZStack {
+                    Circle()
+                        .fill(isGoalMet ? Color.green.opacity(0.15) : Color.blue.opacity(0.15))
+                        .frame(width: 44, height: 44)
+
+                    if isGoalMet {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundStyle(.green)
+                    } else {
+                        Text("+1")
+                            .font(.system(size: 14, weight: .bold, design: .rounded))
+                            .foregroundStyle(.blue)
+                    }
+                }
+                .scaleEffect(animateLog ? 1.2 : 1.0)
             }
             .buttonStyle(.plain)
 
             VStack(alignment: .leading, spacing: 8) {
-                Text(exercise.name)
-                    .font(.system(.body, design: .default, weight: .medium))
+                HStack {
+                    Text(exercise.name)
+                        .font(.system(.body, design: .default, weight: .medium))
+
+                    Spacer()
+
+                    Text(progressText)
+                        .font(.system(.caption, design: .monospaced, weight: .medium))
+                        .foregroundStyle(isGoalMet ? .green : .secondary)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(isGoalMet ? Color.green.opacity(0.1) : Color(.tertiarySystemFill))
+                        .clipShape(Capsule())
+                }
 
                 if !exercise.exerciseDescription.isEmpty {
                     Text(exercise.exerciseDescription)
@@ -144,14 +277,14 @@ struct ExerciseRow: View {
                     .padding(.top, 4)
                 }
             }
-
-            Spacer()
         }
         .sheet(isPresented: $showingDetail) {
             ExerciseDetailView(exercise: exercise)
         }
     }
 }
+
+// MARK: - ExerciseDetailView
 
 struct ExerciseDetailView: View {
     let exercise: Exercise
@@ -213,6 +346,8 @@ struct ExerciseDetailView: View {
         }
     }
 }
+
+// MARK: - AddExerciseView
 
 struct AddExerciseView: View {
     @Environment(\.dismiss) private var dismiss

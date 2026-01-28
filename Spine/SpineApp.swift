@@ -16,7 +16,14 @@ struct SpineApp: App {
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            // During development: delete corrupted store and retry
+            let url = URL.applicationSupportDirectory.appending(path: "default.store")
+            try? FileManager.default.removeItem(at: url)
+            do {
+                return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            } catch {
+                fatalError("Could not create ModelContainer: \(error)")
+            }
         }
     }()
 
